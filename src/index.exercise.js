@@ -55,8 +55,7 @@ function App() {
               Username:{' '}
               <input
                 id="username"
-                value={loginFormData.username || ''}
-                onChange={() => {}}
+                defaultValue={loginFormData.username || ''}
               />
             </label>
           </p>
@@ -65,8 +64,7 @@ function App() {
               Password:{' '}
               <input
                 id="password"
-                value={loginFormData.password || ''}
-                onChange={() => {}}
+                defaultValue={loginFormData.password || ''}
                 type="password"
               />
             </label>
