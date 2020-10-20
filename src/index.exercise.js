@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
+
 import 'bootstrap/dist/css/bootstrap-reboot.css'
 import '@reach/dialog/styles.css'
 import React from 'react'
@@ -21,7 +22,6 @@ function LoginForm({onSubmit, submitButton}) {
 
   return (
     <form
-      onSubmit={handleSubmit}
       css={{
         display: 'flex',
         flexDirection: 'column',
@@ -32,6 +32,7 @@ function LoginForm({onSubmit, submitButton}) {
           maxWidth: '300px',
         },
       }}
+      onSubmit={handleSubmit}
     >
       <FormGroup>
         <label htmlFor="username">Username</label>
@@ -41,7 +42,6 @@ function LoginForm({onSubmit, submitButton}) {
         <label htmlFor="password">Password</label>
         <Input id="password" type="password" />
       </FormGroup>
-
       <div>{React.cloneElement(submitButton, {type: 'submit'})}</div>
     </form>
   )
@@ -78,13 +78,10 @@ function App() {
       >
         <Modal>
           <ModalOpenButton>
-            <Button variant="primary">Login</Button>
+            <Button>Login</Button>
           </ModalOpenButton>
           <ModalContents aria-label="Login form" title="Login">
-            <LoginForm
-              onSubmit={login}
-              submitButton={<Button variant="primary">Login</Button>}
-            />
+            <LoginForm onSubmit={login} submitButton={<Button>Login</Button>} />
           </ModalContents>
         </Modal>
         <Modal>
