@@ -78,10 +78,13 @@ function App() {
       >
         <Modal>
           <ModalOpenButton>
-            <Button>Login</Button>
+            <Button variant="primary">Login</Button>
           </ModalOpenButton>
           <ModalContents aria-label="Login form" title="Login">
-            <LoginForm onSubmit={login} submitButton={<Button>Login</Button>} />
+            <LoginForm
+              onSubmit={login}
+              submitButton={<Button variant="primary">Login</Button>}
+            />
           </ModalContents>
         </Modal>
         <Modal>
