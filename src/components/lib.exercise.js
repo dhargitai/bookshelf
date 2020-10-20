@@ -1,7 +1,39 @@
+/** @jsx jsx */
+import {jsx, keyframes} from '@emotion/core'
 import styled from '@emotion/styled/macro'
 import {Dialog as ReachDialog} from '@reach/dialog'
 import * as colors from 'styles/colors'
 import * as mq from 'styles/media-queries'
+import {FaSpinner} from 'react-icons/fa'
+
+// const rotate = keyframes`
+//   from { transform: rotate(0deg) }
+//   to { transform: rotate(359deg) }
+// `
+
+// const rotate = keyframes`
+//   from, 20%, 53%, 80%, to {
+//     transform: translate3d(0,0,0);
+//   }
+
+//   40%, 43% {
+//     transform: translate3d(0, -30px, 0);
+//   }
+
+//   70% {
+//     transform: translate3d(0, -15px, 0);
+//   }
+
+//   90% {
+//     transform: translate3d(0,-4px,0);
+//   }
+//   `
+
+const Spinning = styled.div({
+  // animation: `${rotate} 1s infinite`,
+})
+
+const Spinner = FaSpinner
 
 const buttonVariants = {
   primary: {
@@ -62,4 +94,4 @@ const FormGroup = styled.div({
   flexDirection: 'column',
 })
 
-export {Button, Input, CircleButton, Dialog, FormGroup}
+export {Button, Input, CircleButton, Dialog, FormGroup, Spinner}
