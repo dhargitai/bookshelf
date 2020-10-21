@@ -6,22 +6,18 @@ import * as colors from 'styles/colors'
 import * as mq from 'styles/media-queries'
 import {FaSpinner} from 'react-icons/fa'
 
-const rotate = keyframes`
-  from { transform: rotate(0deg) }
-  to { transform: rotate(359deg) }
-`
-
-const Spinning = styled.div({
-  animation: `${rotate} 1s linear infinite`,
-  display: 'inline-block',
-  margin: '0 .5em 0 0',
+const rotate = keyframes({
+  '0%': {transform: 'rotate(0deg)'},
+  '100%': {transform: 'rotate(359deg)'},
 })
 
-const Spinner = () => (
-  <Spinning>
-    <FaSpinner />
-  </Spinning>
-)
+const Spinner = styled(FaSpinner)({
+  animation: `${rotate} 1s linear infinite`,
+})
+
+Spinner.defaultProps = {
+  'aria-label': 'Loading...',
+}
 
 const buttonVariants = {
   primary: {
