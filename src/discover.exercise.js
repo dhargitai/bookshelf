@@ -61,7 +61,15 @@ function DiscoverBooksScreen() {
                 background: 'transparent',
               }}
             >
-              {isLoading ? <Spinner /> : <FaSearch aria-label="search" />}
+              {isLoading ? (
+                isError ? (
+                  <FaTimes aria-label="error" css={{color: colors.danger}} />
+                ) : (
+                  <Spinner />
+                )
+              ) : (
+                <FaSearch aria-label="search" />
+              )}
             </button>
           </label>
         </Tooltip>
@@ -78,7 +86,6 @@ function DiscoverBooksScreen() {
             margin: '1rem',
           }}
         >
-          <FaTimes aria-label="error" css={{color: colors.danger}} />
           <p style={{marginBottom: 0}}>There was an error:</p>
           <pre style={{marginBottom: 0}}>{error.message}</pre>
         </div>
