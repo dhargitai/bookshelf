@@ -4,110 +4,15 @@ function client(endpoint, customConfig = {}) {
     ...customConfig,
   }
 
-  return new Promise((resolve, reject) => {
-    window
-      .fetch(`${process.env.REACT_APP_API_URL}/${endpoint}`, config)
-      .then(result => result.json())
-      .then(resolve)
-      .catch(reject)
-  })
+  return window
+    .fetch(`${process.env.REACT_APP_API_URL}/${endpoint}`, config)
+    .then(async response => {
+      const resonseJSON = await response.json()
+      if (resonseJSON?.status >= 400) {
+        throw new Error(resonseJSON?.message)
+      }
+      return resonseJSON
+    })
 }
 
 export {client}
-
-/*
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-💰 spoiler alert below...
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const config = {
-    method: 'GET',
-    ...customConfig,
-  }
-*/

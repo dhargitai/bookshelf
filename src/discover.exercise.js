@@ -1,40 +1,42 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
-import './bootstrap'
+import React from 'react'
 import Tooltip from '@reach/tooltip'
-import {FaSearch} from 'react-icons/fa'
+import {FaSearch, FaTimes} from 'react-icons/fa'
 import {Input, BookListUL, Spinner} from './components/lib'
 import {BookRow} from './components/book-row'
-import {useEffect, useState, useRef} from 'react'
 import {client} from './utils/api-client'
+import * as colors from 'styles/colors'
 
 function DiscoverBooksScreen() {
-  // idle loading success
-  const [status, setStatus] = useState('idle')
-  const [data, setData] = useState(null)
-  const [query, setQuery] = useState('')
-  const isQueried = useRef(false)
-
-  useEffect(() => {
-    if (!isQueried.current || status === 'loading') {
-      return
-    }
-
-    setStatus('loading')
-    client(`books?query=${encodeURIComponent(query)}`).then(resultData => {
-      setData(resultData)
-      isQueried.current = false
-      setStatus('success')
-    })
-  })
+  const [status, setStatus] = React.useState('idle')
+  const [data, setData] = React.useState(null)
+  const [error, setError] = React.useState(null)
+  const [query, setQuery] = React.useState('')
+  const [queried, setQueried] = React.useState(false)
 
   const isLoading = status === 'loading'
   const isSuccess = status === 'success'
+  const isError = error !== null
+
+  React.useEffect(() => {
+    if (!queried) {
+      return
+    }
+    setStatus('loading')
+    client(`books?query=${encodeURIComponent(query)}`)
+      .then(responseData => {
+        setData(responseData)
+        setError(null)
+        setStatus('success')
+      })
+      .catch(setError)
+  }, [query, queried])
 
   function handleSearchSubmit(event) {
     event.preventDefault()
-    isQueried.current = true
+    setQueried(true)
     setQuery(event.target.elements.search.value)
   }
 
@@ -64,6 +66,23 @@ function DiscoverBooksScreen() {
           </label>
         </Tooltip>
       </form>
+
+      {isError ? (
+        <div
+          css={{
+            color: colors.danger,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            columnGap: '10px',
+            margin: '1rem',
+          }}
+        >
+          <FaTimes aria-label="error" css={{color: colors.danger}} />
+          <p style={{marginBottom: 0}}>There was an error:</p>
+          <pre style={{marginBottom: 0}}>{error.message}</pre>
+        </div>
+      ) : null}
 
       {isSuccess ? (
         data?.books?.length ? (
