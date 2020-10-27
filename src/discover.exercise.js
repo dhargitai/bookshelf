@@ -7,31 +7,20 @@ import {FaSearch, FaTimes} from 'react-icons/fa'
 import {Input, BookListUL, Spinner} from './components/lib'
 import {BookRow} from './components/book-row'
 import {client} from './utils/api-client'
-import * as colors from 'styles/colors'
+import * as colors from './styles/colors'
+import {useAsync} from 'utils/hooks'
 
 function DiscoverBooksScreen() {
-  const [status, setStatus] = React.useState('idle')
-  const [data, setData] = React.useState(null)
-  const [error, setError] = React.useState(null)
-  const [query, setQuery] = React.useState('')
+  const {error, data, run, isError, isLoading, isSuccess} = useAsync()
+  const [query, setQuery] = React.useState()
   const [queried, setQueried] = React.useState(false)
-
-  const isLoading = status === 'loading'
-  const isSuccess = status === 'success'
-  const isError = error !== null
 
   React.useEffect(() => {
     if (!queried) {
       return
     }
-    setStatus('loading')
-    client(`books?query=${encodeURIComponent(query)}`)
-      .then(responseData => {
-        setData(responseData)
-        setError(null)
-        setStatus('success')
-      })
-      .catch(setError)
+
+    run(client(`books?query=${encodeURIComponent(query)}`))
   }, [query, queried])
 
   function handleSearchSubmit(event) {
@@ -62,11 +51,9 @@ function DiscoverBooksScreen() {
               }}
             >
               {isLoading ? (
-                isError ? (
-                  <FaTimes aria-label="error" css={{color: colors.danger}} />
-                ) : (
-                  <Spinner />
-                )
+                <Spinner />
+              ) : isError ? (
+                <FaTimes aria-label="error" css={{color: colors.danger}} />
               ) : (
                 <FaSearch aria-label="search" />
               )}
@@ -76,18 +63,9 @@ function DiscoverBooksScreen() {
       </form>
 
       {isError ? (
-        <div
-          css={{
-            color: colors.danger,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            columnGap: '10px',
-            margin: '1rem',
-          }}
-        >
-          <p style={{marginBottom: 0}}>There was an error:</p>
-          <pre style={{marginBottom: 0}}>{error.message}</pre>
+        <div css={{color: colors.danger}}>
+          <p>There was an error:</p>
+          <pre>{error.message}</pre>
         </div>
       ) : null}
 
