@@ -3,36 +3,50 @@ import {jsx} from '@emotion/core'
 
 import React from 'react'
 import * as auth from 'auth-provider'
+import {FullPageSpinner} from './components/lib'
+import * as colors from './styles/colors'
 import {client} from './utils/api-client'
+import {useAsync} from './utils/hooks'
 import {AuthenticatedApp} from './authenticated-app'
 import {UnauthenticatedApp} from './unauthenticated-app'
-import {useAsync} from 'utils/hooks'
-import * as colors from './styles/colors'
-import {FullPageSpinner} from 'components/lib'
 
 async function getUser() {
   let user = null
 
   const token = await auth.getToken()
   if (token) {
-    user = (await client('me', {token})).user
+    const data = await client('me', {token})
+    user = data.user
   }
 
   return user
 }
 
 function App() {
-  const {isIdle, isLoading, isError, setData, error, data} = useAsync(null)
+  const {
+    data: user,
+    error,
+    isLoading,
+    isIdle,
+    isError,
+    isSuccess,
+    run,
+    setData,
+  } = useAsync()
 
   React.useEffect(() => {
-    getUser().then(u => setData(u))
-  }, [])
+    run(getUser())
+  }, [run])
 
-  const login = form => auth.login(form).then(u => setData(u))
-  const register = form => auth.register(form).then(u => setData(u))
+  const login = form => auth.login(form).then(user => setData(user))
+  const register = form => auth.register(form).then(user => setData(user))
   const logout = () => {
     auth.logout()
     setData(null)
+  }
+
+  if (isLoading || isIdle) {
+    return <FullPageSpinner />
   }
 
   if (isError) {
@@ -51,15 +65,15 @@ function App() {
         <pre>{error.message}</pre>
       </div>
     )
-  } else if (isIdle || isLoading) {
-    return <FullPageSpinner />
   }
 
-  return data ? (
-    <AuthenticatedApp user={data} logout={logout} />
-  ) : (
-    <UnauthenticatedApp login={login} register={register} />
-  )
+  if (isSuccess) {
+    return user ? (
+      <AuthenticatedApp user={user} logout={logout} />
+    ) : (
+      <UnauthenticatedApp login={login} register={register} />
+    )
+  }
 }
 
 export {App}
