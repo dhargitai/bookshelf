@@ -55,9 +55,8 @@ function AuthenticatedApp({user, logout}) {
 }
 
 function NavLink(props) {
-  // 🐨 change this from an <a /> to a <Link />
   return (
-    <a
+    <Link
       css={{
         display: 'block',
         padding: '8px 15px 8px 10px',
@@ -100,7 +99,7 @@ function Nav() {
         }}
       >
         <li>
-          <Link to="/discover">Discover</Link>
+          <NavLink to="/discover">Discover</NavLink>
         </li>
       </ul>
     </nav>
@@ -110,7 +109,6 @@ function Nav() {
 function AppRoutes({user}) {
   return (
     <Routes>
-      <Route path="/" element={<DiscoverBooksScreen user={user} />} />
       <Route path="/discover" element={<DiscoverBooksScreen user={user} />} />
       <Route path="/book/:bookId" element={<BookScreen user={user} />} />
       <Route path="*" element={<NotFoundScreen />} />
@@ -119,8 +117,3 @@ function AppRoutes({user}) {
 }
 
 export {AuthenticatedApp}
-
-/*
-eslint
-  jsx-a11y/anchor-has-content: "off",
-*/
